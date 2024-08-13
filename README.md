@@ -35,28 +35,6 @@ __How to Load and Combine Additional CSV Data:__
     * In the `main.py` file, provide the path to the second CSV file when calling the load_data function.
     * The rest of the code should work seamlessly with the combined data.
 
-Example Code Changes in rag_utils.py:
 
-``` 
-def load_data(file_path1, file_path2):
-    Loads two CSV files into a pandas dataframe
-    data1 = pd.read_csv(file_path1)
-    data2 = pd.read_csv(file_path2)
-    combined_data = pd.concat([data1, data2])
-    return combined_data
-``` 
 
-Example Code Changes in `main.py` :
-``` 
-# ... other imports ...
-file_path1 = 'data.csv'
-file_path2 = 'additional_data.csv'
-data = load_data(file_path1, file_path2)
-# ... rest of the main function ...
 
-``` 
-
-Important Considerations:
-
-* Ensure that the columns in both CSV files are compatible for concatenation.
-* You might need to adjust data preprocessing steps if the combined data requires it
