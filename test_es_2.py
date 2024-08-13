@@ -9,12 +9,12 @@ from sentence_transformers import SentenceTransformer
 
 start_time = time.time()
 
-# Token
-with open('./config.json') as f:
+# Token given after approval
+with open('./file.json') as f: #save the token inside a file
     config_data = json.load(f)
 HF_TOKEN = config_data["HF_TOKEN"]
 
-# 1. Load the CSV
+# 1. CSV curated
 all_data = pd.read_csv('df_curated_2023.csv', encoding='latin-1')
 print("Punto de control 1: Datos cargados")
 
@@ -26,7 +26,7 @@ if missing_columns:
 else:
     all_data['combined_info'] = all_data[relevant_columns].apply(lambda x: ' '.join(x.astype(str)), axis=1)
 
-# 3. Generate & Store Embeddings
+# 3. Embeddings
 final_dict = {}
 chunk_size = 100
 sentence_model = SentenceTransformer("all-mpnet-base-v2")
@@ -41,7 +41,7 @@ with open('embeddings_dict.pkl', 'wb') as f:
 
 print("Punto de control 2: Embeddings creados y guardados")
 
-# 4. Query and Respond
+# 4. Query
 def get_context(query, top_k=3):
     query_embedding = sentence_model.encode(query)
     distances = []
@@ -52,11 +52,11 @@ def get_context(query, top_k=3):
     top_indices = torch.topk(torch.tensor(distances), k=top_k, largest=False).indices
     return [final_dict[idx.item()]['text'] for idx in top_indices]
 
-query = "Qué riesgos (RISKS) identificas para Embol y Embonor?"
+query = "Qué riesgos (RISKS) identificas para Embol y Embonor?" # Modificar Query
 context = get_context(query)
 print("Punto de control 3: Contexto obtenido")
 
-# Load Llama 2 model 
+# Llama 2 model 
 model_name = "meta-llama/Llama-2-7b-chat-hf"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = model = AutoModelForCausalLM.from_pretrained(
